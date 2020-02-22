@@ -71,6 +71,13 @@ class Renderer {
 		this.drawCircle({x: 225, y: 375}, 25, [81, 50, 168, 255], framebuffer);
 		this.drawCircle({x: 225, y: 325}, 25, [81, 50, 168, 255], framebuffer);
 		
+		if(this.show_points)
+		{
+			this.drawVertex({x: 200, y: 300}, framebuffer);
+			this.drawVertex({x: 200, y: 400}, framebuffer);
+		
+		}
+		
 		//e - two curves
 		this.drawBezierCurve({x: 300, y: 300}, {x: 275, y: 300}, {x: 250, y: 350}, {x: 300, y: 350}, [81, 50, 168, 255], framebuffer);
 		this.drawBezierCurve({x: 272, y: 325}, {x: 300, y: 325}, {x: 325, y: 325}, {x: 300, y: 350}, [81, 50, 168, 255], framebuffer);
@@ -79,7 +86,11 @@ class Renderer {
 		this.drawLine({x: 340, y: 300}, {x: 340, y: 350}, [81, 50, 168, 255], framebuffer);
 		this.drawBezierCurve({x: 340, y: 338}, {x: 360, y: 340}, {x: 380, y: 340}, {x: 380, y: 300}, [81, 50, 168, 255], framebuffer);
 		
-		
+		if(this.show_points)
+		{
+			this.drawVertex({x: 340, y: 300}, framebuffer);
+			this.drawVertex({x: 340, y: 350}, framebuffer);
+		}
 
     }
 
@@ -96,9 +107,21 @@ class Renderer {
         this.drawLine(right_top, left_top, color, framebuffer);
         this.drawLine(left_top, left_bottom, color, framebuffer);
 		
-       
-			
+		if(this.show_points)
+		{
+			this.drawVertex(left_bottom, framebuffer);
+			this.drawVertex(right_bottom, framebuffer);
+			this.drawVertex(right_top, framebuffer);
+			this.drawVertex(left_top, framebuffer);
+		}
     }
+	
+	drawVertex(center, framebuffer)
+	{
+		this.drawCircle(center, 5, [235, 52, 52, 255], framebuffer);
+	}
+	
+	
 
     // center:       object ({x: __, y: __})
     // radius:       int
@@ -112,7 +135,7 @@ class Renderer {
 		var pt0;
 		var pt1;
 		var increment = (2 * Math.PI)/this.num_curve_sections;
-		
+		let points = [];
         for(var i=0; i < 2*Math.PI; i = i + increment)
         {
             x0 = Math.round(center.x + radius * Math.cos(i - ((2 * Math.PI) / this.num_curve_sections)));
@@ -125,7 +148,22 @@ class Renderer {
 			
             this.drawLine(pt0, pt1, color, framebuffer);
 			
+			points.push(pt0);
+			
         }
+		/*
+		if(this.show_points)
+		{
+			console.log(points.length);
+		
+			for(var i = 0; i < points.length; i++)
+			{
+				console.log(points[i]);
+				this.drawLine(points[i].x + 100, points[i].y +100, [81, 50, 168, 255] , framebuffer);
+				
+			}
+		}
+		*/
 		
     }
 	
@@ -144,7 +182,7 @@ class Renderer {
         var y_next;
 		var length = 1/this.num_curve_sections;
         var t = 0;
-		
+		let points = [];
        
         for (var i = 0; i <= this.num_curve_sections; i++) 
 		{
@@ -152,12 +190,26 @@ class Renderer {
  			y_next = Math.round(Math.pow((1-t), 3) * pt0.y + 3 * Math.pow((1-t), 2) * t * pt1.y + 3 * (1-t) * t * t * pt2.y + Math.pow(t, 3) * pt3.y);
 			
  			this.drawLine({x: x_start, y: y_start}, {x: x_next, y: y_next}, color, framebuffer);
+			
+			points.push({x: x_start, y: y_start});
  			
         	x_start = x_next;
         	y_start = y_next;
 			
         	t = t + length;
         }
+		
+		points.push({x: x_next, y: y_next});
+		
+		if(this.show_points)
+		{
+			for(var i = 0; i < points.length; i++)
+			{
+				this.drawVertex(points[i], framebuffer);
+			}
+		}
+		
+		
     }
 	
 
@@ -190,6 +242,8 @@ class Renderer {
 				this.drawLineHigh(pt1.x, pt1.y, pt0.x, pt0.y, color, framebuffer);
 			}
 		}
+		
+		
     }
 
     drawLineLow(x0, y0, x1, y1, color, framebuffer) {
