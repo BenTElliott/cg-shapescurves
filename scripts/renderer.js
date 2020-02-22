@@ -118,7 +118,7 @@ class Renderer {
 	
 	drawVertex(center, framebuffer)
 	{
-		this.drawCircle(center, 5, [235, 52, 52, 255], framebuffer);
+		this.drawLineLow(center.x - 5, center.y, center.x + 5, center.y, [235, 52, 52, 255] , framebuffer);
 	}
 	
 	
@@ -151,7 +151,7 @@ class Renderer {
 			points.push(pt0);
 			
         }
-		/*
+		
 		if(this.show_points)
 		{
 			console.log(points.length);
@@ -159,11 +159,12 @@ class Renderer {
 			for(var i = 0; i < points.length; i++)
 			{
 				console.log(points[i]);
-				this.drawLine(points[i].x + 100, points[i].y +100, [81, 50, 168, 255] , framebuffer);
+				this.drawLineLow(points[i].x - 5, points[i].y, points[i].x + 5, points[i].y, [235, 52, 52, 255] , framebuffer);
+				
 				
 			}
 		}
-		*/
+		
 		
     }
 	
